@@ -63,7 +63,7 @@
 	  
 -- Q7 Which item was purchased just before the customer became a member?
 
-    with cte as (select mem.customer_id , product_name , order_date , join_date, 
+        with cte as (select mem.customer_id , product_name , order_date , join_date, 
 	DENSE_RANK() over (partition by mem.customer_id order by s.order_date desc) as rnk  from sales s
 	inner join 
 	members mem on mem.customer_id =s.customer_id
@@ -77,7 +77,7 @@
 	
 -- Q8 What is the total items and amount spent for each member before they became a member?
  
-    select  mem.customer_id , STRING_AGG(product_name , ' , ') as items , COUNT(product_name) as total_items
+        select  mem.customer_id , STRING_AGG(product_name , ' , ') as items , COUNT(product_name) as total_items
 	, sum(price) as amt_spent from sales s
 	inner join 
 	members mem on mem.customer_id =s.customer_id
@@ -92,7 +92,7 @@
 
 -- Q9 If each $1 spent equates to 10 points and sushi has a 2x points multiplier - how many points would each customer have?
 
-      with cte as (select * , 
+          with cte as (select * , 
 	  case when product_id = 1 then 20 * price else price*10 End as Points from menu)
 	  select customer_id , Sum(Points) as total_points from sales s
 	  inner join 
@@ -105,7 +105,7 @@
 --     not just sushi - how many points do customer A and B have at the end of January?
  
 
-       with cte as (select s.customer_id ,order_date, join_date , price,
+           with cte as (select s.customer_id ,order_date, join_date , price,
 	   case when (DATEDIFF (DAY, join_date,order_date) between 0 and  7)  then price * 20 
 	   when (DATEDIFF (WEEK, join_date,order_date) != 1) then 0 else 0 end as points 
 	   from sales s
@@ -120,12 +120,12 @@
 
 
 
-/*                                                Bonus Questions
+/*                                                               Bonus Questions
                                                 
 												
-												Join All The Things
-               The following questions are related creating basic data tables that Danny and his team can 
-               use to quickly derive insights without needing to join the underlying tables using SQL.
+				         			Join All The Things
+                            The following questions are related creating basic data tables that Danny and his team can 
+                            use to quickly derive insights without needing to join the underlying tables using SQL.
 
 */
 
@@ -145,7 +145,7 @@
        non-member purchases so he expects null ranking values for the records when customers are not yet part of the loyalty program.
 */ 
 
-     with cte as (select s.customer_id,s.order_date , 
+         with cte as (select s.customer_id,s.order_date , 
 	 m.product_name,m.price , 
 	 (Case when order_date >= join_date 
 	 then 'Y' else 'N' end ) as Member from sales s
